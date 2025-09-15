@@ -1,7 +1,7 @@
-
+import logging
 
 from dvwa.utils import get_csrf_token
-from dvwa.globals import DVWA_URL
+from dvwa.globals import DVWA_URL, DVWA_LOG_LEVEL
 from dvwa.dynamic_session import DynamicSession
 
 
@@ -54,16 +54,16 @@ def main():
                 final_response = session.get(redirect_url)
 
                 if "Logout" in final_response.text:
-                    print(f"[SUCCESS] {username}:{password}")
+                    logging.info(f"[SUCCESS] {username}:{password}")
                     break
                 else:
-                    print(f"[FAILED] {username}:{password}")
+                    logging.info(f"[FAILED] {username}:{password}")
             else:
-                print("Redirect URL not found in response headers.")
+                logging.info("Redirect URL not found in response headers.")
         else:
-            print("No redirection found. Failed login.")
+            logging.info("No redirection found. Failed login.")
     else:
-        print("Brute-force attack failed. No matching password found.")
+        logging.info("Brute-force attack failed. No matching password found.")
 
 
 if __name__ == "__main__":
