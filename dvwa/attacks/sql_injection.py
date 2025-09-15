@@ -30,6 +30,5 @@ def main():
 
 
 if __name__ == "__main__":
-    import logging
     logging.basicConfig(level=DVWA_LOG_LEVEL)
     main()
