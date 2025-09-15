@@ -54,15 +54,14 @@ def login_session(
     return session
 
 
-def get_session_cookie(session, url):
-    login_page = session.get(url)
-    soup = BeautifulSoup(login_page.content, "html.parser")
-    response = session.post(url, data=data, allow_redirects=False)
-    print(response.cookies.get_dict())
+# def get_session_cookie(session, url):
+#     login_page = session.get(url)
+#     soup = BeautifulSoup(login_page.content, "html.parser")
+#     response = session.post(url, data=data, allow_redirects=False)
+#     print(response.cookies.get_dict())
 
 
 if __name__ == "__main__":
-    import requests
     from dvwa.globals import DVWA_URL
 
     session = Session()

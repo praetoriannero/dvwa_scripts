@@ -1,5 +1,4 @@
 from enum import Enum
-import string
 
 import requests
 from bs4 import BeautifulSoup
@@ -20,7 +19,7 @@ class CSRFManager:
 
             user_token = CSRFManager.get_token(args[0]._session, args[0].url)
 
-            if user_token != None:
+            if user_token is not None:
                 args[0].user_token = user_token["value"]
 
             return func(*args, **kwargs)
@@ -65,7 +64,7 @@ class DVWASessionProxy:
 
     def __enter__(self):
 
-        response = self.login(
+        self.login(
             self.url, data={**self.data, **DVWASessionProxy.login_data}
         )
         return self
@@ -78,7 +77,7 @@ class DVWASessionProxy:
     @CSRFManager.set_csrf_token
     def login(self, url, headers=None, data=None):
 
-        response = self._session.post(url, headers=headers, data={**self.data, **data})
+        self._session.post(url, headers=headers, data={**self.data, **data})
 
     def post(self, url, headers=None, data=None):
 
